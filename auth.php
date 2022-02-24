@@ -36,11 +36,21 @@ class auth_plugin_bspdpolicy extends auth_plugin_base {
     /**
      * Constructor.
      */
-    function auth_plugin_bspdpolicy() {
+    public function __construct()
+    {
         $this->authtype = 'bspdpolicy';
-        $this->config = get_config('auth/bspdpolicy');
+        $this->config = get_config('auth_bspdpolicy');
     }
 
+    /**
+     * Old syntax of class constructor. Deprecated in PHP7.
+     *
+     * @deprecated since Moodle 3.1
+     */
+    function auth_plugin_bspdpolicy() {
+        debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
+        self::__construct();
+    }
 
     /**
      * Returns false since username password is not checked yet.
@@ -83,73 +93,36 @@ class auth_plugin_bspdpolicy extends auth_plugin_base {
      * 
      */
     function checkPasswordExpiration(&$user, $username, $password) {
-    	global $SESSION,$USER;
-        $config = get_config('auth/bspdpolicy');
+        $expirationdays = get_config('auth_bspdpolicy','expirationdays');
         $today = mktime(0, 0, 0, date("m")  , date("d"), date("Y"));
         // default date to -1 so if not found always before today
         $passwordExpDate = get_user_preferences(PREF_FIELD_AUTH_BSPDPOLICY_DATE, -1, $user->id);
     	// If not settings found don't expire otherwise check date
-        $passwordExpired = (($config != null && $config !== false) && ($passwordExpDate <= $today));
+        $passwordExpired = (($expirationdays != null && $expirationdays !== false) && ($passwordExpDate <= $today));
         if ($passwordExpired && ($user->auth == 'manual')) {
-        	$expirationdays = $config->expirationdays;
-        	$redirecturl = $config->redirecturl; 
-        	
         	// force new password
         	set_user_preference('auth_forcepasswordchange', 1, $user->id);
         	
-        	// set new date
+        	// set new date for password expiration.
         	$newexpdate = mktime(0, 0, 0, date("m")  , (date("d") + $expirationdays), date("Y"));
         	set_user_preference(PREF_FIELD_AUTH_BSPDPOLICY_DATE, $newexpdate, $user->id);
-        	
-        	// redirect when done
-        	$SESSION->wantsurl = $redirecturl;
         }
     }
+
     /**
      * Checks if the user is an admin/internal user.
      *
      * @param object $user user object, later used for $USER
      */
     function is_admin_user($user) {
-        $mail = $user->email;
-        if (strpos($mail, 'yopmail') !== false || strpos($mail, 'Admin') !== false) {
-            return true;
-        }
-        $uname = $user->username;
-        if (strpos($uname, 'admin') !== false || strpos($uname, 'Admin') !== false) {
-            return true;
+        $internalemailslist = get_config('auth_bspdpolicy', 'internal_emails');
+        $emails = explode(",", $internalemailslist);
+        foreach($emails as $email) {
+            $mail = $user->email;
+            if (strpos($mail, trim($email)) !== false) {
+                return true;
+            }
         }
         return false;
-    }
-    /**
-     * Prints a form for configuring this authentication plugin.
-     *
-     * This function is called from admin/auth.php, and outputs a full page with
-     * a form for configuring this plugin.
-     *
-     * @param array $page An object containing all the data for this page.
-     */
-    function config_form($config, $err, $user_fields) {
-        include "config.html";
-    }
-
-    /**
-     * Processes and stores configuration data for this authentication plugin.
-     */
-    function process_config($config) {
-    	global $CFG;
-        // set to defaults if undefined
-        if (!isset ($config->expirationdays)) {
-            $config->expirationdays = 30;
-        }
-        if (!isset ($config->redirecturl)) {
-            $config->redirecturl = $CFG->httpswwwroot .'/login/change_password.php';
-        }
-
-        // save settings
-        set_config('expirationdays', $config->expirationdays, 'auth/bspdpolicy');
-        set_config('redirecturl', $config->redirecturl, 'auth/bspdpolicy');
-        
-        return true;
     }
 }

@@ -25,4 +25,9 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtextarea('auth_bspdpolicy/internal_emails',
         get_string('internal_emails', 'auth_bspdpolicy'),
         get_string('internal_emails_help', 'auth_bspdpolicy'), ''));
+
+    $settings->add(new admin_setting_configtext('auth_bspdpolicy/expirationdays',
+        get_string('expirationdays', 'auth_bspdpolicy'),
+        get_string('expirationdays_help', 'auth_bspdpolicy'), ''));
+
 }
