@@ -14,18 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Version details
- *
- * @package    auth_bspdpolicy
- * @copyright  UP learning B.V. 2013 www.uplearning.nl
- * @author     Anne Krijger
- * @author     David Bezemer
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
+// This line protects the file from being accessed by a URL directly.
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2022022400;        	// The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2021051700;        	// Requires this Moodle version
-$plugin->component = 'auth_bspdpolicy';       	// Full name of the plugin (used for diagnostics)
+// This is used for performance, we don't need to know about these settings on every page in Moodle, only when
+// we are looking at the admin settings pages.
+if ($ADMIN->fulltree) {
+    $settings->add(new admin_setting_heading('internal_emails', get_string('general_heading', 'auth_bspdpolicy'),''));
+
+    $settings->add(new admin_setting_configtextarea('auth_bspdpolicy/internal_emails',
+        get_string('internal_emails', 'auth_bspdpolicy'),
+        get_string('internal_emails_help', 'auth_bspdpolicy'), ''));
+}

@@ -7,3 +7,6 @@ $string['auth_expirationdays'] = "Number of days after which the password needs 
 $string['auth_redirecturl_key'] = "Redirect URL";
 $string['auth_redirecturl'] = "URL to redirect to when password has expired.";
 $string['pluginname'] = "BS Password Policy";
+$string['general_heading'] = "General";
+$string['internal_emails'] = "List of internal users emails: ";
+$string['internal_emails_help'] = "List of email domains in comma-separated format. Examples: @google.com, @facebook.com";
