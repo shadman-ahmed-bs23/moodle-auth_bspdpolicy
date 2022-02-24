@@ -66,7 +66,10 @@ class auth_plugin_bspdpolicy extends auth_plugin_base {
      * 
      */
     function user_authenticated_hook(&$user, $username, $password) {
-    	$this->checkPasswordExpiration($user, $username, $password); 
+        // Password expiration should be only for the admin/internal user.
+        if($this->is_admin_user($user)) {
+            $this->checkPasswordExpiration($user, $username, $password);
+        }
     }
        
     /**
@@ -102,7 +105,22 @@ class auth_plugin_bspdpolicy extends auth_plugin_base {
         	$SESSION->wantsurl = $redirecturl;
         }
     }
-    
+    /**
+     * Checks if the user is an admin/internal user.
+     *
+     * @param object $user user object, later used for $USER
+     */
+    function is_admin_user($user) {
+        $mail = $user->email;
+        if (strpos($mail, 'yopmail') !== false || strpos($mail, 'Admin') !== false) {
+            return true;
+        }
+        $uname = $user->username;
+        if (strpos($uname, 'admin') !== false || strpos($uname, 'Admin') !== false) {
+            return true;
+        }
+        return false;
+    }
     /**
      * Prints a form for configuring this authentication plugin.
      *
@@ -135,4 +153,3 @@ class auth_plugin_bspdpolicy extends auth_plugin_base {
         return true;
     }
 }
-?>
