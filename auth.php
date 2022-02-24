@@ -96,10 +96,10 @@ class auth_plugin_bspdpolicy extends auth_plugin_base {
         $expirationdays = get_config('auth_bspdpolicy','expirationdays');
         $today = mktime(0, 0, 0, date("m")  , date("d"), date("Y"));
         // default date to -1 so if not found always before today
-        $passwordExpDate = get_user_preferences(PREF_FIELD_AUTH_BSPDPOLICY_DATE, -1, $user->id);
+        $passwordexpdate = get_user_preferences(PREF_FIELD_AUTH_BSPDPOLICY_DATE, -1, $user->id);
     	// If not settings found don't expire otherwise check date
-        $passwordExpired = (($expirationdays != null && $expirationdays !== false) && ($passwordExpDate <= $today));
-        if ($passwordExpired && ($user->auth == 'manual')) {
+        $passwordexpired = (($expirationdays != null && $expirationdays !== false) && ($passwordexpdate <= $today));
+        if ($passwordexpired && ($user->auth == 'manual')) {
         	// force new password
         	set_user_preference('auth_forcepasswordchange', 1, $user->id);
         	
