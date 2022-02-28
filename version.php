@@ -17,10 +17,9 @@
 /**
  * Version details
  *
- * @package    auth_bspdpolicy
- * @copyright  UP learning B.V. 2013 www.uplearning.nl
- * @author     Anne Krijger
- * @author     David Bezemer
+ * @package    auth
+ * @subpackage bspdpolicy
+ * @author     2022 Brain Station 23
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
