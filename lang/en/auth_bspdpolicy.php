@@ -36,3 +36,7 @@ $string['internal_emails'] = "List of internal emails: ";
 $string['internal_emails_help'] = "List of email domains in comma-separated format. Examples: @google.com, @facebook.com";
 $string['expirationdays'] = "Days until expiry";
 $string['expirationdays_help'] = "Number of days after which the password needs to expire";
+$string['token_page_title'] = "Token Input";
+$string['tokenvalidity_visiblename'] = 'Token validation time';
+$string['tokenvalidity_description'] =  'Minutes after token becomes invalid';
+$string['invalidtoken'] = 'Login failed, wrong or expired token was provided.';
