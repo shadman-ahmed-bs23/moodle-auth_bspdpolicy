@@ -39,4 +39,13 @@ $string['expirationdays_help'] = "Number of days after which the password needs 
 $string['token_page_title'] = "Token Input";
 $string['tokenvalidity_visiblename'] = 'Token validation time';
 $string['tokenvalidity_description'] =  'Minutes after token becomes invalid';
-$string['invalidtoken'] = 'Login failed, wrong or expired token was provided.';
+$string['invalidtoken'] = 'Login failed, expired token was provided.';
+$string['wrongtoken'] = 'Login failed, wrong token was provided.';
+$string['tokenemail'] = 'Hi, {$a->username}
+
+Use the following OTP to complete your sign in process. OTP is valid for {$a->tokenvalidtime} mintues.
+
+<h3>{$a->otp}</h3>
+
+Regards. ';
+$string['emailsubject'] = 'Verify Moodle Sign In!';

@@ -73,11 +73,18 @@ function auth_bspdpolicy_generate_token($username) {
 
 function auth_bspdpolicy_send_otp_mail($userinfo) {
     global $CFG; // adding otp mail code
+    $tokenvalidtime = get_config('auth_bspdpolicy', 'tokenvalidity');
     $useremail = new stdClass();
     $useremail->email = $userinfo->email; // for testing example 'testuser@yopmail.com';
     $useremail->id = $userinfo->id;
-    $subject = "otp code";
-    $messagetxt = auth_bspdpolicy_generate_token($userinfo->username);
+    $subject = get_string('emailsubject', 'auth_bspdpolicy');
+    $otp = auth_bspdpolicy_generate_token($userinfo->username);
+    // Data to be passed in the email template.
+    $data = new stdClass();
+    $data->username = $userinfo->username;
+    $data->otp = $otp;
+    $data->tokenvalidtime = $tokenvalidtime;
+    $messagetxt = get_string('tokenemail', 'auth_bspdpolicy', $data);
     $sender = new stdClass();
     $sender->email = 'tester@example.com';
     $sender->id = -98;

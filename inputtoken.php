@@ -46,8 +46,7 @@ if ($token == 'null') {
     echo $OUTPUT->render_from_template('auth_bspdpolicy/input_token', $templetecontext);
     echo $OUTPUT->footer();
 } else {
-    $userstat = $DB->get_record_select('auth_bspdpolicy', "username = :username", array('username' => $username));var_dump($userstat);
-    //die;
+    $userstat = $DB->get_record_select('auth_bspdpolicy', "username = :username", array('username' => $username));
     $currentime = time();
 
     if ($userstat->otp == $token && $userstat->timevalid >= $currentime && (int)$userstat->status == 1) {
@@ -59,6 +58,8 @@ if ($token == 'null') {
         // user login
         complete_user_login($user);
         redirect($CFG->wwwroot, "login successful", null, \core\output\notification::NOTIFY_SUCCESS);
+    } else if ($userstat->otp != $token && $userstat->timevalid >= $currentime && (int)$userstat->status == 1 ) {
+        redirect(new moodle_url('/auth/bspdpolicy/inputtoken.php?username=' . $username), get_string('wrongtoken', 'auth_bspdpolicy'), null, \core\output\notification::NOTIFY_ERROR);
     } else {
         redirect($CFG->wwwroot . "/login/index.php", get_string('invalidtoken', 'auth_bspdpolicy'), null, \core\output\notification::NOTIFY_ERROR);
     }
