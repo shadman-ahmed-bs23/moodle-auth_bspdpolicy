@@ -88,10 +88,13 @@ class auth_plugin_bspdpolicy extends auth_plugin_base {
      * 
      */
     function user_authenticated_hook(&$user, $username, $password) {
-        global $CFG;
+        global $CFG, $SESSION;
         // Password expiration should be only for the admin/internal user.
         if (!isloggedin() && $this->auth_bspdpolicy_is_admin_user($user)) {
-            redirect($CFG->wwwroot . '/auth/bspdpolicy/inputtoken.php?username=' . $username);
+            //redirect($CFG->wwwroot . '/auth/bspdpolicy/inputtoken.php?username=' . $username);
+            $SESSION->username = $username;
+            $SESSION->logintime = time();
+            redirect($CFG->wwwroot . '/auth/bspdpolicy/inputtoken.php');
         }
     }
     /**

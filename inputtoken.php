@@ -32,14 +32,17 @@ $PAGE->set_url(new moodle_url('/auth/bspdpolicy/inputtoken.php'));
 $PAGE->set_context(\context_system::instance());
 $PAGE->set_title(get_string('token_page_title', 'auth_bspdpolicy'));
 
-$username = optional_param('username', 'null', PARAM_TEXT);
+//$username = optional_param('username', 'null', PARAM_TEXT);
 $token = optional_param('token', null, PARAM_TEXT);
 $wrongtoken = optional_param('wrongtoken', 0, PARAM_TEXT);
 $expiredtoken = optional_param('expiredtoken', 0, PARAM_TEXT);
+if (isset($SESSION->username)) {
+    $username = $SESSION->username;
+}
 
 if (!$token) {
     $userinfo = $DB->get_record('user', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id));
-    if(!$wrongtoken && !$expiredtoken) {
+    if (!$wrongtoken && !$expiredtoken) {
         auth_bspdpolicy_send_otp_mail($userinfo);
     }
     // Login url to be passed in expired token message.
@@ -69,14 +72,14 @@ if (!$token) {
         $userstat->status = 0;
         $DB->update_record('auth_bspdpolicy', $userstat);
         $user =  $DB->get_record('user', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id));
-        // for password expiration check
+        // For password expiration check.
         auth_bspdpolicy_check_pwd_expiration($user);
-        // user login
+        // User login.
         complete_user_login($user);
         redirect($CFG->wwwroot, get_string('loginsuccessfultxt', 'auth_bspdpolicy'), null, \core\output\notification::NOTIFY_SUCCESS);
-    } else if ($userstat->otp != $token && $userstat->timevalid >= $currentime && (int)$userstat->status == 1 ) {
-        redirect(new moodle_url('/auth/bspdpolicy/inputtoken.php?username=' . $username . '&wrongtoken=1'));
+    } else if ($userstat->otp != $token && $userstat->timevalid >= $currentime && (int)$userstat->status == 1) {
+        redirect(new moodle_url('/auth/bspdpolicy/inputtoken.php?wrongtoken=1'));
     } else {
-        redirect(new moodle_url('/auth/bspdpolicy/inputtoken.php?username=' . $username . '&expiredtoken=1'));
+        redirect(new moodle_url('/auth/bspdpolicy/inputtoken.php?expiredtoken=1'));
     }
 }
