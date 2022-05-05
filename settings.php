@@ -40,4 +40,17 @@ if ($ADMIN->fulltree) {
         get_string('expirationdays', 'auth_bspdpolicy'),
         get_string('expirationdays_help', 'auth_bspdpolicy'), ''));
 
+    $settings->add(new admin_setting_configtext(
+        'auth_bspdpolicy/tokenvalidity',
+        get_string('tokenvalidity_visiblename', 'auth_bspdpolicy'),
+        get_string('tokenvalidity_description', 'auth_bspdpolicy'),
+        2
+    ));
+
+    $settings->add(new admin_setting_configtextarea(
+        'auth_bspdpolicy/emailtemplate',
+        get_string('emailtemplatefield', 'auth_bspdpolicy'),
+        get_string('emailtemplatefield_description', 'auth_bspdpolicy'),
+        get_string('defaulttemplate', 'auth_bspdpolicy')
+    ));
 }

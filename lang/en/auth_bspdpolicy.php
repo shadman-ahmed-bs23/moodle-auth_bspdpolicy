@@ -36,3 +36,29 @@ $string['internal_emails'] = "List of internal emails: ";
 $string['internal_emails_help'] = "List of email domains in comma-separated format. Examples: @google.com, @facebook.com";
 $string['expirationdays'] = "Days until expiry";
 $string['expirationdays_help'] = "Number of days after which the password needs to expire";
+$string['token_page_title'] = "Token Input";
+$string['tokenvalidity_visiblename'] = 'Token validation time';
+$string['tokenvalidity_description'] =  'Minutes after token becomes invalid';
+$string['invalidtoken'] = 'Login failed, expired token was provided.';
+$string['wrongtoken'] = 'Login failed, invalid token';
+$string['tokenemail'] = 'Hi, {$a->username}
+
+Use the following OTP to complete your sign in process. OTP is valid for {$a->tokenvalidtime} mintues.
+
+<h3>{$a->otp}</h3>
+
+Regards. ';
+$string['emailsubject'] = 'Verify Moodle Sign In!';
+$string['sitename'] = 'Abbvie CME Academy';
+$string['loginbtntext'] = 'Log in';
+$string['tokenplaceholder'] = 'Token';
+$string['expiredtokenmsg'] = 'Login failed, token expired.';
+//$string['expiredtokenmsg'] = 'Login failed, expired token was provided. Please {$a->loginurl} again';
+
+// Raw text replacement in input token page for expired token message.
+$string['text1'] = 'Please';
+$string['text2'] = 'again';
+$string['loginsuccessfultxt'] = 'Login successful!';
+$string['emailtemplatefield'] = 'Email Template: ';
+$string['emailtemplatefield_description'] = 'Email template for the token confirmation email. Put the placeholder for OTP inside this bracket {{}}. Example: Hi, your OTP for login: {{OTP}}.';
+$string['defaulttemplate'] = 'Hi, Use the following OTP to complete your login process: {{OTP}}';

@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f1f1f1;
+}
+
+.path-auth-bspdpolicy #page {
+    background-size: cover;
+    background-image:url('./images/Background-Image.jpg');
+}
+
+.path-auth-bspdpolicy  section#region-main{
+    background: transparent;
+}
+
+.path-auth-bspdpolicy #page-header{
+    visibility: hidden;
+    background: transparent !important;
+}
+
+.path-auth-bspdpolicy #page #page-content #region-main {
+    border-bottom: none !important;
+}
+
+.path-auth-bspdpolicy .card {
+    width: 40%;
+}
+
+@media only screen and (max-width: 640px){
+    .path-auth-bspdpolicy .card{
+        width: 100% !important;
+    }
+}
+@media only screen and (max-width: 1024px){
+    .path-auth-bspdpolicy .card{
+        width: 75% !important;
+    }
+}
