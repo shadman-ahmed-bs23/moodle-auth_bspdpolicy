@@ -75,6 +75,32 @@ function xmldb_auth_bspdpolicy_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2022022401, 'auth', 'bspdpolicy');
     }
 
+    if ($oldversion < 2022022403) {
+
+        // Define table auth_bspdpolicy to be created.
+        $table = new xmldb_table('auth_bspdpolicy_email_logs');
+
+        // Adding fields to table auth_bspdpolicy.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('username', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('email', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('otp', XMLDB_TYPE_INTEGER, '6', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('used', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timesent', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, '0');
+
+        // Adding keys to table auth_bspdpolicy.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Conditionally launch create table for auth_bspdpolicy.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Bspdpolicy savepoint reached.
+        upgrade_plugin_savepoint(true, 2022022403, 'auth', 'bspdpolicy');
+    }
+
+
 
     return true;
 }
