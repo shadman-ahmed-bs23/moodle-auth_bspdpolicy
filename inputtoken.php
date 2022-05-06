@@ -32,12 +32,26 @@ $PAGE->set_url(new moodle_url('/auth/bspdpolicy/inputtoken.php'));
 $PAGE->set_context(\context_system::instance());
 $PAGE->set_title(get_string('token_page_title', 'auth_bspdpolicy'));
 
-//$username = optional_param('username', 'null', PARAM_TEXT);
 $token = optional_param('token', null, PARAM_TEXT);
-$wrongtoken = optional_param('wrongtoken', 0, PARAM_TEXT);
-$expiredtoken = optional_param('expiredtoken', 0, PARAM_TEXT);
+
 if (isset($SESSION->username)) {
     $username = $SESSION->username;
+}
+
+// Check for invalid token.
+if (!empty($SESSION->wrongtoken)) {
+    $wrongtoken = 1;
+    unset($SESSION->wrongtoken);
+} else {
+    $wrongtoken = 0;
+}
+
+// Check for expired token.
+if (!empty($SESSION->expiredtoken)) {
+    $expiredtoken = 1;
+    unset($SESSION->expiredtoken);
+} else {
+    $expiredtoken = 0;
 }
 
 if (!$token) {
@@ -47,7 +61,7 @@ if (!$token) {
     }
     // Login url to be passed in expired token message.
     $data = new stdClass();
-    //$data->loginurl = new moodle_url('/login/index.php');
+
     $data->loginurl = $CFG->wwwroot . "/login/index.php";
     $templetecontext = (object)[
         'username' => $username,
@@ -84,8 +98,10 @@ if (!$token) {
         complete_user_login($user);
         redirect($CFG->wwwroot, get_string('loginsuccessfultxt', 'auth_bspdpolicy'), null, \core\output\notification::NOTIFY_SUCCESS);
     } else if ($userstat->otp != $token && $userstat->timevalid >= $currentime && (int)$userstat->status == 1) {
-        redirect(new moodle_url('/auth/bspdpolicy/inputtoken.php?wrongtoken=1'));
+        $SESSION->wrongtoken = 1;
+        redirect(new moodle_url('/auth/bspdpolicy/inputtoken.php'));
     } else {
-        redirect(new moodle_url('/auth/bspdpolicy/inputtoken.php?expiredtoken=1'));
+        $SESSION->expiredtoken = 1;
+        redirect(new moodle_url('/auth/bspdpolicy/inputtoken.php'));
     }
 }

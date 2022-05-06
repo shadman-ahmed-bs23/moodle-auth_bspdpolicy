@@ -72,7 +72,7 @@ function auth_bspdpolicy_generate_token($username) {
 }
 
 function auth_bspdpolicy_send_otp_mail($userinfo) {
-    global $CFG, $DB; // adding otp mail code
+    global $CFG, $DB, $SESSION;
     $tokenvalidtime = get_config('auth_bspdpolicy', 'tokenvalidity');
     $emailtemplatetext = get_config('auth_bspdpolicy', 'emailtemplate');
 
@@ -89,11 +89,12 @@ function auth_bspdpolicy_send_otp_mail($userinfo) {
 
     $emaillogs = $DB->get_records_sql($sql, $params);
     if(count($emaillogs) >= 5) {
-        redirect(new moodle_url('/login/index.php'), get_string('emaillimitingmsg', 'auth_bspdpolicy'), 42, \core\output\notification::NOTIFY_ERROR);
+        $SESSION->loginerrormsg = get_string('emaillimitingmsg', 'auth_bspdpolicy');
+        redirect(new moodle_url('/login/index.php'));
     }
 
     $useremail = new stdClass();
-    $useremail->email = $userinfo->email; // for testing example 'testuser@yopmail.com';
+    $useremail->email = $userinfo->email;
     $useremail->id = $userinfo->id;
     $subject = get_string('emailsubject', 'auth_bspdpolicy');
     $otp = auth_bspdpolicy_generate_token($userinfo->username);
@@ -104,7 +105,6 @@ function auth_bspdpolicy_send_otp_mail($userinfo) {
     $data->username = $userinfo->username;
     $data->otp = $otp;
     $data->tokenvalidtime = $tokenvalidtime;
-    // $messagetxt = get_string('tokenemail', 'auth_bspdpolicy', $data);
     $messagetxt = $emailwithtoken;
     $sender = new stdClass();
     $sender->email = 'tester@example.com';
