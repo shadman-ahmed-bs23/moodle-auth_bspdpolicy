@@ -72,9 +72,25 @@ function auth_bspdpolicy_generate_token($username) {
 }
 
 function auth_bspdpolicy_send_otp_mail($userinfo) {
-    global $CFG; // adding otp mail code
+    global $CFG, $DB; // adding otp mail code
     $tokenvalidtime = get_config('auth_bspdpolicy', 'tokenvalidity');
     $emailtemplatetext = get_config('auth_bspdpolicy', 'emailtemplate');
+
+    // Check email logs for rate limiting. 
+    // User will be able to receive five emails without using the token.
+
+    $sql = "SELECT *
+            FROM {auth_bspdpolicy_email_logs}
+            WHERE username = :username AND timesent > :lasthour AND used = 0";
+    $params = [
+        'username'=>$userinfo->username, 
+        'lasthour'=> time() - 3600,
+    ];
+
+    $emaillogs = $DB->get_records_sql($sql, $params);
+    if(count($emaillogs) >= 5) {
+        redirect(new moodle_url('/login/index.php'), get_string('emaillimitingmsg', 'auth_bspdpolicy'), 42, \core\output\notification::NOTIFY_ERROR);
+    }
 
     $useremail = new stdClass();
     $useremail->email = $userinfo->email; // for testing example 'testuser@yopmail.com';
@@ -103,10 +119,20 @@ function auth_bspdpolicy_send_otp_mail($userinfo) {
     // send email
     ob_start();
     $success = email_to_user($useremail, $sender, $subject, $messagetxt, '', '', '', false);
+
     $smtplog = ob_get_contents();
     ob_end_clean();
 
+    // Save email log after sending email.
+    $emaillog = new stdClass();
+    $emaillog->username = $userinfo->username;
+    $emaillog->email = $userinfo->email;
+    $emaillog->otp = $otp;
+    $emaillog->used = 0;
+    $emaillog->timesent = time();
+    $DB->insert_record("auth_bspdpolicy_email_logs", $emaillog);
     return $smtplog;
+
 }
 
 function auth_bspdpolicy_create_user_instance($username, $otpcode) {

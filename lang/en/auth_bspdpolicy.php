@@ -62,3 +62,4 @@ $string['loginsuccessfultxt'] = 'Login successful!';
 $string['emailtemplatefield'] = 'Email Template: ';
 $string['emailtemplatefield_description'] = 'Email template for the token confirmation email. Put the placeholder for OTP inside this bracket {{}}. Example: Hi, your OTP for login: {{OTP}}.';
 $string['defaulttemplate'] = 'Hi, Use the following OTP to complete your login process: {{OTP}}';
+$string['emaillimitingmsg'] = 'Token emails have been sent too many times. Try again after 1 hour.';

@@ -71,6 +71,12 @@ if (!$token) {
     if ($userstat->otp == $token && $userstat->timevalid >= $currentime && (int)$userstat->status == 1) {
         $userstat->status = 0;
         $DB->update_record('auth_bspdpolicy', $userstat);
+        
+        // Update email log after each login.
+        $emaillog = $DB->get_record('auth_bspdpolicy_email_logs', array('otp' => $userstat->otp));
+        $emaillog->used = 1;
+        $DB->update_record('auth_bspdpolicy_email_logs', $emaillog);
+
         $user =  $DB->get_record('user', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id));
         // For password expiration check.
         auth_bspdpolicy_check_pwd_expiration($user);
